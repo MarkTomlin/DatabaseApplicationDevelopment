@@ -1,0 +1,33 @@
+1.
+CREATE OR REPLACE FUNCTION min_price (p product.prodid%TYPE, od ord.orderdate%TYPE)
+RETURN NUMBER IS
+
+	price_var	price.minprice%TYPE;
+BEGIN 
+SELECT	minprice
+INTO	price_var
+FROM	price 
+WHERE 	prodid = p
+AND		od BETWEEN startdate AND enddate;
+
+RETURN price_var;
+END;
+/
+
+2.
+CREATE OR REPLACE FUNCTION last_deliv (c customer.custid%TYPE)
+RETURN NUMBER IS
+
+	date_var	delivery.deliverydate%TYPE;
+BEGIN
+SELECT 	c.custid, d.deliverydate
+INTO 	date_var
+FROM 	customer c, ord o, item i, delivered_item di, delivery d
+WHERE 	c.custid = o.custid
+AND 	o.ordid = i.ordid
+AND 	i.ordid = di.ordid
+AND 	di.delid = d.delid;
+
+RETURN date_var
+END;
+/
